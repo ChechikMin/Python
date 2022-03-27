@@ -4,15 +4,8 @@ from LogisticRegr import *
 if __name__ == '__main__':
 
     df = pd.read_csv('clean_data.csv', delimiter=',')
-    # head = ['card', 'reports', 'age', 'income', 'expenditure', 'owner', 'selfemp', 'dependents', 'months',
-    #         'majorcards', 'active']
-    # itemsReplaced = {'yes': 1, 'no': 0}
-    # df = df.replace(itemsReplaced)
-    # print(df.head())
-    # pd.columns = head
-    # print(pd)
 
-    card = df['card']  #
+    card = df['card']  # goal parameter
     reports = df['reports']
     age = df['age']
     income = df['income']
@@ -25,7 +18,7 @@ if __name__ == '__main__':
 
     train_size = int(len(card) * .75)
 
-    train_x = np.array(card[:train_size])
+    train_x = np.array(card[:train_size])  # goal parameter
     train_a = np.array(reports[:train_size])
     train_b = np.array(age[:train_size])
     train_c = np.array(income[:train_size])
@@ -36,7 +29,7 @@ if __name__ == '__main__':
     train_i = np.array(majorcards[:train_size])
     train_j = np.array(active[:train_size])
 
-    test_x = np.array(card[train_size:len(card)])
+    test_x = np.array(card[train_size:len(card)])  # goal parameter
     test_a = np.array(reports[train_size:len(reports)])
     test_b = np.array(age[train_size:len(age)])
     test_c = np.array(income[train_size:len(income)])
@@ -47,17 +40,41 @@ if __name__ == '__main__':
     test_i = np.array(majorcards[train_size:len(majorcards)])
     test_j = np.array(active[train_size:len(active)])
 
+    dataset_sizes = {'train': train_x.shape[0], 'test': test_x.shape[0]}
+
     learningRate = .0001
     epochs = 50
 
     model = LogisticRegr(9, 1)
 
-    losses = torch.nn.BCELoss()
+    criterion = torch.nn.BCELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learningRate)
 
+    y_loss = {'train': [], 'test': []}
+    y_err = {'train': [], 'test': []}
+    x_epoch = []
+    fig = plt.figure()
+    ax0 = fig.add_subplot(121, title="loss")
+    ax1 = fig.add_subplot(122, title="top1err")
+
+    def draw_curve(current_epoch):
+        x_epoch.append(current_epoch)
+        ax0.plot(x_epoch, y_loss['train'], 'bo-', label='train')
+        ax0.plot(x_epoch, y_loss['test'], 'ro-', label='test')
+        ax1.plot(x_epoch, y_err['train'], 'bo-', label='train')
+        ax1.plot(x_epoch, y_err['test'], 'ro-', label='test')
+        if current_epoch == 0:
+            ax0.legend()
+            ax1.legend()
+        fig.show()
+
+    running_loss = 0.
+    running_corrects = 0.
+
     for epoch in range(epochs):
+        print(f'Epoch {epoch + 1}/{epochs}\n', '-' * 20)
+
         for i in range(len(train_x)):
-            # Converting inputs and labels to Variable
             if torch.cuda.is_available():
                 inputs = Variable(torch.from_numpy(np.array([train_a[i], train_b[i], train_c[i],
                                                              train_d[i], train_e[i], train_f[i],
@@ -72,52 +89,37 @@ if __name__ == '__main__':
                 labels = Variable(torch.from_numpy(np.array([train_x[i]]))).double()
 
             optimizer.zero_grad()
-
-            # get output from the model, given the inputs
             outputs = model(inputs)
-
-            # get loss for the predicted output
-            loss = losses(outputs, labels)
-            # print(loss)
-            # get gradients w.r.t to parameters
+            _, preds = torch.max(outputs.data, 1)
+            loss = criterion(outputs, labels)
             loss.backward()
-
-            # update parameters
             optimizer.step()
 
+        x_epoch.append(epoch)
+        running_loss += loss.item()
+        running_corrects += float(torch.sum(preds == labels.data))
         print(f'epoch {epoch}, loss {loss.item()}')
+
+    epoch_loss = running_loss / dataset_sizes['train']
+    epoch_acc = running_corrects / dataset_sizes['train']
+
+    print(f'Train:\n\nLoss: {epoch_loss}')
+
     predicted = []
     for epoch in range(len(test_x)):
-        with torch.no_grad():  # we don't need gradients in the testing phase
+        with torch.no_grad():
             if torch.cuda.is_available():
-                predicted.append(model(
-                    Variable(torch.from_numpy(np.array([train_a[epoch], train_b[epoch], train_c[epoch],
-                                                        train_d[epoch], train_e[epoch], train_f[epoch],
-                                                        train_g[epoch], train_i[epoch],
-                                                        train_j[epoch]])).cuda()).double()).cpu().data.numpy())
+                predicted.append(
+                    model(Variable(torch.from_numpy(np.array([train_a[epoch], train_b[epoch], train_c[epoch],
+                                                              train_d[epoch], train_e[epoch], train_f[epoch],
+                                                              train_g[epoch], train_i[epoch],
+                                                              train_j[epoch]])).cuda()).double()).cpu().data.numpy())
             else:
                 predicted.append(
                     model(Variable(torch.from_numpy(np.array([train_a[epoch], train_b[epoch], train_c[epoch],
                                                               train_d[epoch], train_e[epoch], train_f[epoch],
                                                               train_g[epoch], train_i[epoch],
                                                               train_j[epoch]]))).double()).data.numpy())
-    print(predicted[-1])
+    print(predicted)
 
-    plt.clf()
-    plt.bar([int(_) for _ in range(len(predicted))], predicted[-1])
-
-    plt.grid()
-
-    # plt.scatter(test_x, test_a)
-    # plt.scatter(test_b, np.array(predicted))
-    plt.legend(['Test_x/Predicted', 'Truth'])
-    # loss = losses(Variable(torch.from_numpy(np.array([93.6,5.6]))), Variable(torch.from_numpy(np.array(test_x[30]))))
-    # print(loss)
-
-    plt.show()
-
-    # print(*model.parameters())
-
-    # window = Tk()
-    # window.mainloop()
-    # window.title('Application for Calc procent')
+    print(*model.parameters(), sep='\n\n')
