@@ -6,9 +6,9 @@ import torch.nn
 from torch.autograd import Variable
 
 
-class linearRegression(torch.nn.Module):
+class LinearRegression(torch.nn.Module):
     def __init__(self, sizeInTrain, sizeOutTrain):
-        super(linearRegression,self).__init__()
+        super(LinearRegression, self).__init__()
         self.linear = torch.nn.Linear(sizeInTrain, sizeOutTrain).double()
 
     def forward(self, train_x):

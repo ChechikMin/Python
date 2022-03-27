@@ -4,9 +4,10 @@ import numpy as np
 import torch.nn
 from torch.autograd import Variable
 
+
 class LogisticRegr(torch.nn.Module):
     def __init__(self, sizeInTrain, sizeOutTrain):
-        super(LogisticRegr,self).__init__()
+        super(LogisticRegr, self).__init__()
         self.linear = torch.nn.Linear(sizeInTrain, sizeOutTrain).double()
 
     def forward(self, train_x):
