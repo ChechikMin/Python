@@ -48,7 +48,7 @@ if __name__ == '__main__':
     # Initialize model with saved weights:
 
     # model = LogisticRegr(9, 1)
-    # model.load_state_dict(torch.load('weights.pt'))
+    # model.load_state_dict(torch.load('1layer_weights.pt'))
     # model.eval()
 
     model = LogisticRegr(9, 1)
@@ -118,6 +118,6 @@ if __name__ == '__main__':
             print(f'{phase} Loss: {epoch_loss} Acc: {epoch_acc}\n\n')
 
     fig.show()
-    fig.savefig('loss_acc_plot.png')
+    # fig.savefig('loss_acc_plot.png')
 
-    torch.save(model.state_dict(), 'weights.pt')
+    # torch.save(model.state_dict(), '1layer_weights.pt')
