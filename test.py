@@ -1,12 +1,11 @@
-from classification import *
+from include.classification import *
 
-from torchviz import make_dot
 
-df = pd.read_csv('clean_data.csv', delimiter=',')
-
-model = Classification(9, 1)
-model.extract_data(df, aim_par='card')
-model.train()
-# model.load_state_dict(torch.load('1layer_weights.pt'))
+model = Classification(23, 1)
+model.extract_data('src/UCI_Credit_Card.csv', aim_par='default.payment.next.month')
+# model.load_state_dict(torch.load('bin/linear_sigmoid-UCI.pt'))
+model.train_predict(num_epochs=200)
 model.predict()
 model.show_results()
+
+print(*model.parameters(), sep='\n\n')

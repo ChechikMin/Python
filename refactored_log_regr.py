@@ -48,7 +48,7 @@ if __name__ == '__main__':
     # Initialize model with saved weights:
 
     # model = LogisticRegr(9, 1)
-    # model.load_state_dict(torch.load('1layer_weights.pt'))
+    # model.load_state_dict(torch.load('linear_sigmoid-clean_data.pt'))
     # model.eval()
 
     model = LogisticRegr(9, 1)
@@ -120,4 +120,4 @@ if __name__ == '__main__':
     fig.show()
     # fig.savefig('loss_acc_plot.png')
 
-    # torch.save(model.state_dict(), '1layer_weights.pt')
+    # torch.save(model.state_dict(), 'linear_sigmoid-clean_data.pt')

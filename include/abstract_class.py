@@ -1,10 +1,10 @@
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 import pandas as pd
 import torch.nn
 
 
-class NNPattern(torch.nn.Module):
+class NNPattern(ABC, torch.nn.Module):
     """
     Pattern class of the neural network to inherit.
 
@@ -69,6 +69,19 @@ class NNPattern(torch.nn.Module):
         pass
 
     @abstractmethod
+    def shuffle_data(self) -> None:
+        """
+        Update data permutation
+
+        Arguments:
+                None
+
+        Outputs:
+                None
+        """
+        pass
+
+    @abstractmethod
     def extract_data(self, df: pd.DataFrame, aim_par: str, split_ratio: float) -> None:
         """
         Prepare given data for training and validating the neural network
@@ -87,13 +100,18 @@ class NNPattern(torch.nn.Module):
         pass
 
     @abstractmethod
-    def draw_curve(self, cur_epoch: int) -> None:
+    def draw_curve(self, cur_epoch: int, phase_type: int) -> None:
         """
         Create and update loss and accuracy charts of the training phase
 
         Arguments:
                 cur_epoch: int
                     Current epoch of training
+                phase_type: int
+                    Add train and/or test data to the chart
+                    Values:
+                        0 - train only
+                        1 - train and test
 
         Outputs:
                 None
@@ -124,6 +142,21 @@ class NNPattern(torch.nn.Module):
         Arguments:
                 None
 
+        Outputs:
+                None
+        """
+        pass
+
+    @abstractmethod
+    def train_predict(self) -> None:
+        """
+        Function for parallel training and validation of the neural network
+
+        Arguments:
+             lr: float
+                    The learning rate of the neural network
+                num_epochs: int
+                    The quantity of epochs to train the neural network
         Outputs:
                 None
         """
