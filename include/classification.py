@@ -56,13 +56,13 @@ class Classification(NNPattern):
         self.input_size = input_size
         self.output_size = output_size
 
-        # self.inputLayer = torch.nn.Linear(self.input_size, self.input_size)
-        # self.h1 = torch.nn.Tanh()
-        # self.h2 = torch.nn.Bilinear(self.input_size // 2,
-        #                             self.input_size - self.input_size // 2, self.input_size)
-        # self.h3 = torch.nn.Tanh()
-        # self.outputLayer = torch.nn.Linear(self.input_size, self.output_size)
-        self.linear = torch.nn.Linear(self.input_size, self.output_size)
+        self.inputLayer = torch.nn.Linear(self.input_size, self.input_size)
+        self.h1 = torch.nn.Tanh()
+        self.h2 = torch.nn.Bilinear(self.input_size // 2,
+                                    self.input_size - self.input_size // 2, self.input_size)
+        self.h3 = torch.nn.Tanh()
+        self.outputLayer = torch.nn.Linear(self.input_size, self.output_size)
+        # self.linear = torch.nn.Linear(self.input_size, self.output_size)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -77,14 +77,14 @@ class Classification(NNPattern):
                     Updated weights
         """
 
-        predict = self.linear(x)
-        return torch.sigmoid(predict)
-        # x = self.inputLayer(x)
-        # x = torch.relu(self.h1(x))
-        # x = torch.sigmoid(self.h2(x[:self.input_size // 2], x[self.input_size // 2:]))
-        # x = torch.relu(self.h3(x))
-        # x = self.outputLayer(x)
-        # return torch.sigmoid(x)
+        # predict = self.linear(x)
+        # return torch.sigmoid(predict)
+        x = self.inputLayer(x)
+        x = torch.relu(self.h1(x))
+        x = torch.sigmoid(self.h2(x[:self.input_size // 2], x[self.input_size // 2:]))
+        x = torch.relu(self.h3(x))
+        x = self.outputLayer(x)
+        return torch.sigmoid(x)
 
     def bernoulliLayer(self) -> None:
         pass
