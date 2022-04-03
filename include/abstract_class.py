@@ -65,7 +65,11 @@ class NNPattern(ABC, torch.nn.Module):
         pass
 
     @abstractmethod
-    def bernoulliLayer(self) -> None:
+    def uniformLayer(self, x: torch.Tensor) -> None:
+        pass
+
+    @abstractmethod
+    def gaussianLayer(self, x: torch.Tensor) -> None:
         pass
 
     @abstractmethod

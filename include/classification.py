@@ -55,13 +55,16 @@ class Classification(NNPattern):
         super(Classification, self).__init__(input_size, output_size)
         self.input_size = input_size
         self.output_size = output_size
+        self.base = torch.empty((self.input_size, self.input_size))
 
-        self.inputLayer = torch.nn.Linear(self.input_size, self.input_size)
-        self.h1 = torch.nn.Tanh()
-        self.h2 = torch.nn.Bilinear(self.input_size // 2,
-                                    self.input_size - self.input_size // 2, self.input_size)
-        self.h3 = torch.nn.Tanh()
-        self.outputLayer = torch.nn.Linear(self.input_size, self.output_size)
+        # self.inputLayer = torch.nn.Linear(self.input_size, self.input_size)
+        # self.uniformLayer(self.base)
+        # self.h1 = torch.nn.Tanh()
+        # self.h2 = torch.nn.Bilinear(self.input_size // 2,
+        #                             self.input_size - self.input_size // 2, self.input_size)
+        # self.h3 = torch.nn.Tanh()
+        # self.outputLayer = torch.nn.ELU(self.input_size, self.output_size)
+        self.outputLayer = torch.nn.ReLU(self.output_size)
         # self.linear = torch.nn.Linear(self.input_size, self.output_size)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -79,15 +82,19 @@ class Classification(NNPattern):
 
         # predict = self.linear(x)
         # return torch.sigmoid(predict)
-        x = self.inputLayer(x)
-        x = torch.relu(self.h1(x))
-        x = torch.sigmoid(self.h2(x[:self.input_size // 2], x[self.input_size // 2:]))
-        x = torch.relu(self.h3(x))
+        # x = self.inputLayer(x)
+        # x = torch.sigmoid(self.h1(x))
+        # x = torch.relu(self.h1(x))
+        # x = torch.sigmoid(self.h2(x[:self.input_size // 2], x[self.input_size // 2:]))
+        # x = torch.relu(self.h3(x))
         x = self.outputLayer(x)
         return torch.sigmoid(x)
 
-    def bernoulliLayer(self) -> None:
-        pass
+    def uniformLayer(self, x: torch.Tensor) -> None:
+        torch.nn.init.uniform(x)
+
+    def gaussianLayer(self, x: torch.Tensor) -> None:
+        torch.nn.init.normal(x)
 
     def shuffle_data(self) -> None:
         self.ds_idx = {'train': torch.randperm(self.ds_sizes['train']),
@@ -262,7 +269,7 @@ class Classification(NNPattern):
         """
 
         criterion = torch.nn.BCELoss()
-        optimizer = torch.optim.Adam(self.parameters(), lr=lr)
+        optimizer = torch.optim.SGD(self.parameters(), lr=lr)
 
         self.y_loss = {'train': [], 'test': []}
         self.y_err = {'train': [], 'test': []}
