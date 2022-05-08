@@ -1,21 +1,5 @@
 import pandas as pd
 import numpy as np
-import copy
-
-
-def full_column_residual(income_column, dependents_column, subsistence_level=15000):
-    result = income_column - subsistence_level * dependents_column
-    return result
-
-
-def find_emission(column):
-    list_ = []
-    mean_ = np.mean(column)
-    sigma_ = np.std(column)
-    for i in range(len(column)):
-        if (np.abs(column[i]) > mean_ + 3*sigma_):
-            list_.append(i)
-    return list_
 
 
 def get_coef_annuet(month_percent, month_credit):
