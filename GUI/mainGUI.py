@@ -27,7 +27,15 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.pushButton_3.clicked.connect(self.saveData3)
         self.ui.pushButton_4.clicked.connect(self.saveData4)
         self.ui.pushButton_5.clicked.connect(self.nextTip)
+        self.ui.pushButton_6.clicked.connect(self.back)
         self.ui.lineEdit.adjustSize()
+
+
+    def back(self):
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.ui.pushButton.clicked.connect(self.btnClicked)
+
     def saveData1(self):
         text = self.ui.lineEdit.text()
         self.__hashData["Age"] = text
@@ -60,9 +68,15 @@ class mywindow(QtWidgets.QMainWindow):
         # лежат в __hashData
 
 
-
         self.ui = Ui_MainWindow3()
         self.ui.setupUi(self)
+
+        self.ui.pushButton.clicked.connect(self.btnClicked)
+
+    def back1(self):
+        self.ui = Ui_MainWindow1()
+        self.ui.setupUi(self)
+
 
 app = QtWidgets.QApplication([])
 application = mywindow()

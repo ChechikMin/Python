@@ -59,6 +59,10 @@ class Ui_MainWindow1(object):
         self.pushButton_5.setIconSize(QtCore.QSize(50, 50))
         self.pushButton_5.setCheckable(False)
         self.pushButton_5.setObjectName("pushButton_5")
+        self.pushButton_6 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_6.setGeometry(QtCore.QRect(10, 480, 141, 61))
+        self.pushButton_6.setStyleSheet("font: 16pt \"MS Shell Dlg 2\";")
+        self.pushButton_6.setObjectName("pushButton_6")
         MainWindow1.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow1)
         self.statusbar.setObjectName("statusbar")
@@ -93,5 +97,6 @@ class Ui_MainWindow1(object):
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">MARRIGE</span></p></body></html>"))
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">MARRIAGE</span></p></body></html>"))
         self.pushButton_5.setText(_translate("MainWindow1", "Next"))
+        self.pushButton_6.setText(_translate("MainWindow1", "Back"))

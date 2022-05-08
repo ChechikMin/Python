@@ -20,6 +20,10 @@ class Ui_MainWindow3(object):
         self.textBrowser = QtWidgets.QTextBrowser(self.centralwidget)
         self.textBrowser.setGeometry(QtCore.QRect(210, 190, 321, 191))
         self.textBrowser.setObjectName("textBrowser")
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setGeometry(QtCore.QRect(30, 470, 141, 61))
+        self.pushButton.setStyleSheet("font: 16pt \"MS Shell Dlg 2\";")
+        self.pushButton.setObjectName("pushButton")
         MainWindow3.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow3)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
@@ -41,3 +45,4 @@ class Ui_MainWindow3(object):
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:28pt;\">Place for recommendations and economics</span></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:28pt;\">.....</span></p></body></html>"))
+        self.pushButton.setText(_translate("MainWindow3", "Back"))
