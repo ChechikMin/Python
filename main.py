@@ -64,8 +64,10 @@ if __name__ == '__main__':
     CREDIT_SUM = 1e6
     AGE = 40
     RESIDUAL = 20000
+    MAX_AGE_THRESHOLD = 70
+    PERCENT_RANGE = (12.5, 14.5)
 
-    Credit = CreateCredit(CREDIT_SUM, AGE, RESIDUAL)
+    Credit = CreateCredit(CREDIT_SUM, AGE, RESIDUAL, MAX_AGE_THRESHOLD, PERCENT_RANGE)
     results = Credit.calc_results()
 
     print(results)
