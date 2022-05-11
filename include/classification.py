@@ -1,9 +1,10 @@
+from typing import Dict
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import torch.nn
-import torch.functional as F
 
 from include.abstract_class import NNPattern
 
@@ -128,6 +129,7 @@ class Classification(NNPattern):
 
         print(self.ds_sizes)
 
+        # df = df.drop('Unnamed: 0', axis=1)
         df = df.drop('ID', axis=1)
         self.targets = {'train': np.array(df[aim_par][:self.ds_sizes['train']]),
                         'test': np.array(df[aim_par][self.ds_sizes['train']:self.len_ds])}

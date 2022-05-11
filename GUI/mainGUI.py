@@ -1,16 +1,23 @@
+import sys
 
+import numpy as np
+import pandas as pd
 from PyQt5 import QtWidgets
+
+from ..include.classification import Classification
 from mydesign import Ui_MainWindow  # импорт нашего сгенерированного файла
 from mydesign1 import Ui_MainWindow1
 from mydesign3 import Ui_MainWindow3
-import sys
 
 
-class mywindow(QtWidgets.QMainWindow):
-
+class MyWindow(QtWidgets.QMainWindow):
     __hashData = {}
+    COLUMNS = ['LIMIT_BAL', 'SEX', 'EDUCATION',
+               'MARRIAGE', 'AGE', 'PAY_AMT1', 'PAY_AMT2',
+               'PAY_AMT3', 'PAY_AMT4', 'PAY_AMT5', 'PAY_AMT6']
+
     def __init__(self):
-        super(mywindow, self).__init__()
+        super(MyWindow, self).__init__()
         self.startMainWindow()
 
     def startMainWindow(self):
@@ -19,7 +26,7 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.pushButton.clicked.connect(self.btnClicked)
 
     def btnClicked(self):
-        #self.window = QtWidgets.QMainWindow()
+        # self.window = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindow1()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.saveData1)
@@ -30,7 +37,6 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.pushButton_6.clicked.connect(self.back)
         self.ui.lineEdit.adjustSize()
 
-
     def back(self):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -39,38 +45,101 @@ class mywindow(QtWidgets.QMainWindow):
     def saveData1(self):
         text = self.ui.lineEdit.text()
         self.__hashData["Age"] = text
-        #self.ui.pushButton.setText(text)
+        # self.ui.pushButton.setText(text)
 
     def saveData2(self):
         text = self.ui.lineEdit_2.text()
         self.__hashData["Sex"] = text
-        #self.ui.pushButton_2.setText(text)
+        # self.ui.pushButton_2.setText(text)
 
     def saveData3(self):
         text = self.ui.lineEdit_3.text()
         self.__hashData["Education"] = text
-        #self.ui.pushButton_3.setText(text)
+        # self.ui.pushButton_3.setText(text)
 
     def saveData4(self):
         text = self.ui.lineEdit_4.text()
-        self.__hashData["Marrige"] = text
-        #self.ui.pushButton_4.setText(text)
+        self.__hashData["Marriage"] = text
+        # self.ui.pushButton_4.setText(text)
 
-    def nextTip(self):
-        #тут нужно вызвать нейронку
-        # и
-        # попросить её посчитать
-        # нашего клиента
+    def saveData5(self):
+        text = self.ui.lineEdit_5.text()
+        self.__hashData["Credit_sum"] = text
+        # self.ui.pushButton_5.setText(text)
 
+    def saveData6(self):
+        text = self.ui.lineEdit_6.text()
+        self.__hashData["PAY_AMT1"] = text
+        # self.ui.pushButton_6.setText(text)
 
-        # данные для работы
-        # с входными данными
-        # лежат в __hashData
+    def saveData7(self):
+        text = self.ui.lineEdit_7.text()
+        self.__hashData["PAY_AMT2"] = text
+        # self.ui.pushButton_7.setText(text)
+
+    def saveData8(self):
+        text = self.ui.lineEdit_8.text()
+        self.__hashData["PAY_AMT3"] = text
+        # self.ui.pushButton_8.setText(text)
+
+    def saveData9(self):
+        text = self.ui.lineEdit_9.text()
+        self.__hashData["PAY_AMT4"] = text
+        # self.ui.pushButton_9.setText(text)
+
+    def saveData10(self):
+        text = self.ui.lineEdit_10.text()
+        self.__hashData["PAY_AMT5"] = text
+        # self.ui.pushButton_10.setText(text)
+
+    def saveData11(self):
+        text = self.ui.lineEdit_11.text()
+        self.__hashData["PAY_AMT6"] = text
+        # self.ui.pushButton_11.setText(text)
+
+    def prepare_data(self, data: dict) -> np.ndarray:
+        df = pd.DataFrame(columns=self.COLUMNS)
+        for key, val in data.items():
+            df[key] = [val]
+        return np.array(df)
+
+    def nextTipLogRegr(self):
+        data = self.prepare_data(self.__hashData)
+
+        model = Classification(12, 1)
+        model.load_state_dict(torch.load('bin/log_regr-UCI_13.pt'))
+        model.eval()
+
+        with torch.no_grad():
+            if torch.cuda.is_available():
+                inputs = torch.tensor(data, requires_grad=True, dtype=torch.float).cuda()
+            else:
+                inputs = torch.tensor(data, requires_grad=True, dtype=torch.float)
+            output = model.forward(inputs)
+        result = bool(round(output.data.item()))
+
+        self.ui = Ui_MainWindow3()
+        self.ui.setupUi(self)
+        self.ui.pushButton.clicked.connect(self.btnClicked)
+
+    def nextTipNonLin(self):
+        data = self.prepare_data(self.__hashData)
+
+        model = Classification(12, 1)
+        model.load_state_dict(torch.load('bin/non_lin-UCI_cleaned.pt'))
+        model.eval()
+
+        with torch.no_grad():
+            if torch.cuda.is_available():
+                inputs = torch.tensor(data, requires_grad=True, dtype=torch.float).cuda()
+            else:
+                inputs = torch.tensor(data, requires_grad=True, dtype=torch.float)
+            output = model.forward(inputs)
+        result = bool(round(output.data.item()))
 
 
         self.ui = Ui_MainWindow3()
         self.ui.setupUi(self)
-
         self.ui.pushButton.clicked.connect(self.btnClicked)
 
     def back1(self):
@@ -79,7 +148,7 @@ class mywindow(QtWidgets.QMainWindow):
 
 
 app = QtWidgets.QApplication([])
-application = mywindow()
+application = MyWindow()
 application.show()
 
 sys.exit(app.exec())
