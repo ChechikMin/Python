@@ -1,15 +1,15 @@
-from collections import namedtuple
 import sys
+from collections import namedtuple
 from typing import Tuple, List
 
 import numpy as np
 import pandas as pd
 from PyQt5 import QtWidgets
 
-from ..include.classification import Classification
 from mydesign import Ui_MainWindow  # импорт нашего сгенерированного файла
 from mydesign1 import Ui_MainWindow1
 from mydesign3 import Ui_MainWindow3
+from ..include.classification import Classification
 
 
 class MyWindow(QtWidgets.QMainWindow):
