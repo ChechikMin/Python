@@ -56,17 +56,15 @@ class Classification(NNPattern):
         super(Classification, self).__init__(input_size, output_size)
         self.input_size = input_size
         self.output_size = output_size
-        # self.base = torch.empty((self.input_size, self.input_size))
 
+        # self.linear = torch.nn.Linear(self.input_size, self.output_size)
         self.inputLayer = torch.nn.Linear(self.input_size, self.input_size)
         self.uniformLayer(self.inputLayer.weight)
         self.h1 = torch.nn.Tanh()
         self.h2 = torch.nn.Bilinear(self.input_size // 2,
                                     self.input_size - self.input_size // 2, self.input_size)
         self.h3 = torch.nn.Tanh()
-        # self.outputLayer = torch.nn.ELU(self.input_size, self.output_size)
         self.outputLayer = torch.nn.Linear(self.input_size, self.output_size)
-        # self.linear = torch.nn.Linear(self.input_size, self.output_size)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -129,8 +127,7 @@ class Classification(NNPattern):
 
         print(self.ds_sizes)
 
-        # df = df.drop('Unnamed: 0', axis=1)
-        df = df.drop('ID', axis=1)
+        df = df.drop(['Unnamed: 0'], axis=1)
         self.targets = {'train': np.array(df[aim_par][:self.ds_sizes['train']]),
                         'test': np.array(df[aim_par][self.ds_sizes['train']:self.len_ds])}
         df = df.drop(aim_par, axis=1)
@@ -141,6 +138,8 @@ class Classification(NNPattern):
                        'test': torch.randperm(self.ds_sizes['test'])}
 
         self.fig = None
+
+        print(self.ds['train'][0])
 
     def draw_curve(self, cur_epoch: int, phase_type: int) -> None:
         """

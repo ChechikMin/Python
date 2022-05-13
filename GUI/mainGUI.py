@@ -1,4 +1,6 @@
+from collections import namedtuple
 import sys
+from typing import Tuple, List
 
 import numpy as np
 import pandas as pd
@@ -15,6 +17,7 @@ class MyWindow(QtWidgets.QMainWindow):
     COLUMNS = ['LIMIT_BAL', 'SEX', 'EDUCATION',
                'MARRIAGE', 'AGE', 'PAY_AMT1', 'PAY_AMT2',
                'PAY_AMT3', 'PAY_AMT4', 'PAY_AMT5', 'PAY_AMT6']
+    LIMIT_BAL_CONST = 0.95
 
     def __init__(self):
         super(MyWindow, self).__init__()
@@ -101,13 +104,13 @@ class MyWindow(QtWidgets.QMainWindow):
         df = pd.DataFrame(columns=self.COLUMNS)
         for key, val in data.items():
             df[key] = [val]
-        return np.array(df)
+        return np.array(df)[0]
 
     def nextTipLogRegr(self):
         data = self.prepare_data(self.__hashData)
 
-        model = Classification(12, 1)
-        model.load_state_dict(torch.load('bin/log_regr-UCI_13.pt'))
+        model = Classification(11, 1)
+        model.load_state_dict(torch.load('bin/log_regr-UCI_13_rub.pt'))
         model.eval()
 
         with torch.no_grad():
@@ -125,8 +128,8 @@ class MyWindow(QtWidgets.QMainWindow):
     def nextTipNonLin(self):
         data = self.prepare_data(self.__hashData)
 
-        model = Classification(12, 1)
-        model.load_state_dict(torch.load('bin/non_lin-UCI_cleaned.pt'))
+        model = Classification(11, 1)
+        model.load_state_dict(torch.load('bin/non_lin-UCI_13_rub.pt'))
         model.eval()
 
         with torch.no_grad():
@@ -137,10 +140,39 @@ class MyWindow(QtWidgets.QMainWindow):
             output = model.forward(inputs)
         result = bool(round(output.data.item()))
 
-
         self.ui = Ui_MainWindow3()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.btnClicked)
+
+    def getRecommendations(self, pars: torch.nn.parameter.Parameter, data: np.ndarray) -> Tuple[List[str], int]:
+        Par = namedtuple('Par', ['val', 'name'])
+        par_col = []
+        for par, col in zip(list(pars)[-2][0].tolist(), self.COLUMNS):
+            par_col.append(Par(par, col))
+        par_col.sort(reverse=True)
+
+        # ТОП-3 параметра, которые не позволяют выдать кредит:
+        bad_pars = [par.name for par in par_col if par.name != 'SEX'][:3]
+
+        model = Classification(11, 1)
+        model.load_state_dict('bin/log_regr-UCI_13_rub.pt')
+        model.eval()
+
+        result = False
+        while not result:
+            data[0] *= self.LIMIT_BAL_CONST
+            with torch.no_grad():
+                if torch.cuda.is_available():
+                    inputs = torch.tensor(data, requires_grad=True, dtype=torch.float).cuda()
+                else:
+                    inputs = torch.tensor(data, requires_grad=True, dtype=torch.float)
+                output = model.forward(inputs)
+            result = bool(round(output.data.item()))
+
+        # Сумма, на которую можно выдать кредит с текущими параметрами
+        good_sum = round(data[0])
+
+        return bad_pars, good_sum
 
     def back1(self):
         self.ui = Ui_MainWindow1()
