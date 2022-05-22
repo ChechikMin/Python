@@ -32,30 +32,65 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow1()
         self.ui.setupUi(self)
 
-        self.ui.comboBox.addItem("Male",1)
-        self.ui.comboBox.addItem("Female", 2)
-
-        self.ui.comboBox_2.addItem("Master/GraduateStudent", 1)
-        self.ui.comboBox_2.addItem("Bachelour", 2)
-        self.ui.comboBox_2.addItem("SecondarySchool/FurtherEd", 3)
-
-        self.ui.comboBox_3.addItem("Married", 1)
-        self.ui.comboBox_3.addItem("Single", 2)
-        self.ui.comboBox_3.addItem("Other", 3)
-
         self.ui.buttonBox.accepted.connect(self.saveData)
-        self.ui.pushButton_5.clicked.connect(self.nextTipNonLin)
+        self.ui.buttonBox.rejected.connect(self.dropData)
+        self.ui.pushButton_5.clicked.connect(self.nextTip)
         self.ui.pushButton_6.clicked.connect(self.back)
         self.ui.lineEdit.adjustSize()
 
     def saveData(self):
-        pass
+
+        self.__hashData[self.COLUMNS[0]] = self.ui.lineEdit.text()
+        self.__hashData[self.COLUMNS[1]] = self.ui.comboBox.currentIndex()
+        self.__hashData[self.COLUMNS[2]] = self.ui.comboBox_2.currentIndex()
+        self.__hashData[self.COLUMNS[3]] = self.ui.comboBox_3.currentIndex()
+        self.__hashData[self.COLUMNS[4]] = self.ui.lineEdit_2.text()
+        self.__hashData[self.COLUMNS[5]] = self.ui.textEdit_6.text()
+        self.__hashData[self.COLUMNS[6]] = self.ui.textEdit_7.text()
+        self.__hashData[self.COLUMNS[7]] = self.ui.textEdit_8.text()
+        self.__hashData[self.COLUMNS[8]] = self.ui.textEdit_9.text()
+        self.__hashData[self.COLUMNS[9]] = self.ui.textEdit_10.text()
+        self.__hashData[self.COLUMNS[10]] = self.ui.textEdit_13.text()
+
+        self.nextTipLogRegr()
+
+    def dropData(self):
+        self.__hashData.clear()
+        self.ui.lineEdit.clear()
+        self.ui.lineEdit_2.clear()
+        self.ui.textEdit_6.clear()
+        self.ui.textEdit_7.clear()
+        self.ui.textEdit_8.clear()
+        self.ui.textEdit_9.clear()
+        self.ui.textEdit_10.clear()
+        self.ui.textEdit_13.clear()
 
     def back(self):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.btnClicked)
 
+    def nextTip(self):
+
+        self.ui = Ui_MainWindow3()
+        self.ui.setupUi(self)
+
+        answer = "Reject"
+        if self.result:
+            answer = "Accept"
+
+        self.ui.label.setText("Neural Network procecc : ".join( answer ))
+
+        self.ui.pushButton.clicked.connect(self.back1)
+        self.ui.pushButton_2.clicked.connect(self.calc)
+
+
+    def calc(self):
+        sum = self.ui.textEdit_5.text()
+        procent = self.ui.textEdit_6.text()
+        years = self.ui.textEdit_4.text()
+
+        
 
     def prepare_data(self, data: dict) -> np.ndarray:
         df = pd.DataFrame(columns=self.COLUMNS)
@@ -76,11 +111,7 @@ class MyWindow(QtWidgets.QMainWindow):
             else:
                 inputs = torch.tensor(data, requires_grad=True, dtype=torch.float)
             output = model.forward(inputs)
-        result = bool(round(output.data.item()))
-
-        self.ui = Ui_MainWindow3()
-        self.ui.setupUi(self)
-        self.ui.pushButton.clicked.connect(self.back1)
+        self.result = bool(round(output.data.item()))
 
     def nextTipNonLin(self):
         # data = self.prepare_data(self.__hashData)

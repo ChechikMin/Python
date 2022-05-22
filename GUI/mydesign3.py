@@ -106,9 +106,9 @@ class Ui_MainWindow3(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow3.setWindowTitle(_translate("MainWindow3", "MainWindow"))
         self.plainTextEdit.setPlainText(_translate("MainWindow3", "Individual Recommendation"))
-        self.label_2.setText(_translate("MainWindow3", "TextLabel"))
+        self.label_2.setText(_translate("MainWindow3", "Final solution"))
         self.plainTextEdit_2.setPlainText(_translate("MainWindow3", "Reccomendation from Neural Network"))
-        self.label.setText(_translate("MainWindow3", "TextLabel"))
+        self.label.setText(_translate("MainWindow3", "Solution from network"))
         item = self.tableWidget.verticalHeaderItem(0)
         item.setText(_translate("MainWindow3", "Period, years"))
         item = self.tableWidget.verticalHeaderItem(1)

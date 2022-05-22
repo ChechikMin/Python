@@ -150,6 +150,16 @@ class Ui_MainWindow1(object):
         self.pushButton_5.setObjectName("pushButton_5")
         self.horizontalLayout_3.addWidget(self.pushButton_5)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
+        self.comboBox.addItem("Male", 1)
+        self.comboBox.addItem("Female", 2)
+
+        self.comboBox_2.addItem("Master/GraduateStudent", 1)
+        self.comboBox_2.addItem("Bachelour", 2)
+        self.comboBox_2.addItem("SecondarySchool/FurtherEd", 3)
+
+        self.comboBox_3.addItem("Married", 1)
+        self.comboBox_3.addItem("Single", 2)
+        self.comboBox_3.addItem("Other", 3)
         MainWindow1.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow1)
