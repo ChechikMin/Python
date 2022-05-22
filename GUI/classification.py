@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-import torch.nn
+import torch
 
-from include.abstract_class import NNPattern
+from abstract_class import NNPattern
 
 
 class Classification(NNPattern):

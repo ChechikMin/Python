@@ -2,14 +2,13 @@ import sys
 from collections import namedtuple
 from typing import Tuple, List
 
-import numpy as np
-import pandas as pd
 from PyQt5 import QtWidgets
 
-from mydesign import Ui_MainWindow  # импорт нашего сгенерированного файла
+from mydesign import Ui_MainWindow
 from mydesign1 import Ui_MainWindow1
 from mydesign3 import Ui_MainWindow3
-from ..include.classification import Classification
+from classification import *
+
 
 
 class MyWindow(QtWidgets.QMainWindow):
@@ -32,73 +31,31 @@ class MyWindow(QtWidgets.QMainWindow):
         # self.window = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindow1()
         self.ui.setupUi(self)
-        self.ui.pushButton.clicked.connect(self.saveData1)
-        self.ui.pushButton_2.clicked.connect(self.saveData2)
-        self.ui.pushButton_3.clicked.connect(self.saveData3)
-        self.ui.pushButton_4.clicked.connect(self.saveData4)
-        self.ui.pushButton_5.clicked.connect(self.nextTip)
+
+        self.ui.comboBox.addItem("Male",1)
+        self.ui.comboBox.addItem("Female", 2)
+
+        self.ui.comboBox_2.addItem("Master/GraduateStudent", 1)
+        self.ui.comboBox_2.addItem("Bachelour", 2)
+        self.ui.comboBox_2.addItem("SecondarySchool/FurtherEd", 3)
+
+        self.ui.comboBox_3.addItem("Married", 1)
+        self.ui.comboBox_3.addItem("Single", 2)
+        self.ui.comboBox_3.addItem("Other", 3)
+
+        self.ui.buttonBox.accepted.connect(self.saveData)
+        self.ui.pushButton_5.clicked.connect(self.nextTipNonLin)
         self.ui.pushButton_6.clicked.connect(self.back)
         self.ui.lineEdit.adjustSize()
+
+    def saveData(self):
+        pass
 
     def back(self):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.btnClicked)
 
-    def saveData1(self):
-        text = self.ui.lineEdit.text()
-        self.__hashData["Age"] = text
-        # self.ui.pushButton.setText(text)
-
-    def saveData2(self):
-        text = self.ui.lineEdit_2.text()
-        self.__hashData["Sex"] = text
-        # self.ui.pushButton_2.setText(text)
-
-    def saveData3(self):
-        text = self.ui.lineEdit_3.text()
-        self.__hashData["Education"] = text
-        # self.ui.pushButton_3.setText(text)
-
-    def saveData4(self):
-        text = self.ui.lineEdit_4.text()
-        self.__hashData["Marriage"] = text
-        # self.ui.pushButton_4.setText(text)
-
-    def saveData5(self):
-        text = self.ui.lineEdit_5.text()
-        self.__hashData["Credit_sum"] = text
-        # self.ui.pushButton_5.setText(text)
-
-    def saveData6(self):
-        text = self.ui.lineEdit_6.text()
-        self.__hashData["PAY_AMT1"] = text
-        # self.ui.pushButton_6.setText(text)
-
-    def saveData7(self):
-        text = self.ui.lineEdit_7.text()
-        self.__hashData["PAY_AMT2"] = text
-        # self.ui.pushButton_7.setText(text)
-
-    def saveData8(self):
-        text = self.ui.lineEdit_8.text()
-        self.__hashData["PAY_AMT3"] = text
-        # self.ui.pushButton_8.setText(text)
-
-    def saveData9(self):
-        text = self.ui.lineEdit_9.text()
-        self.__hashData["PAY_AMT4"] = text
-        # self.ui.pushButton_9.setText(text)
-
-    def saveData10(self):
-        text = self.ui.lineEdit_10.text()
-        self.__hashData["PAY_AMT5"] = text
-        # self.ui.pushButton_10.setText(text)
-
-    def saveData11(self):
-        text = self.ui.lineEdit_11.text()
-        self.__hashData["PAY_AMT6"] = text
-        # self.ui.pushButton_11.setText(text)
 
     def prepare_data(self, data: dict) -> np.ndarray:
         df = pd.DataFrame(columns=self.COLUMNS)
@@ -123,26 +80,26 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.ui = Ui_MainWindow3()
         self.ui.setupUi(self)
-        self.ui.pushButton.clicked.connect(self.btnClicked)
+        self.ui.pushButton.clicked.connect(self.back1)
 
     def nextTipNonLin(self):
-        data = self.prepare_data(self.__hashData)
-
-        model = Classification(11, 1)
-        model.load_state_dict(torch.load('bin/non_lin-UCI_13_rub.pt'))
-        model.eval()
-
-        with torch.no_grad():
-            if torch.cuda.is_available():
-                inputs = torch.tensor(data, requires_grad=True, dtype=torch.float).cuda()
-            else:
-                inputs = torch.tensor(data, requires_grad=True, dtype=torch.float)
-            output = model.forward(inputs)
-        result = bool(round(output.data.item()))
+        # data = self.prepare_data(self.__hashData)
+        #
+        # model = Classification(11, 1)
+        # model.load_state_dict(torch.load('bin/non_lin-UCI_13_rub.pt'))
+        # model.eval()
+        #
+        # with torch.no_grad():
+        #     if torch.cuda.is_available():
+        #         inputs = torch.tensor(data, requires_grad=True, dtype=torch.float).cuda()
+        #     else:
+        #         inputs = torch.tensor(data, requires_grad=True, dtype=torch.float)
+        #     output = model.forward(inputs)
+        # result = bool(round(output.data.item()))
 
         self.ui = Ui_MainWindow3()
         self.ui.setupUi(self)
-        self.ui.pushButton.clicked.connect(self.btnClicked)
+        self.ui.pushButton.clicked.connect(self.back1)
 
     def getRecommendations(self, pars: torch.nn.parameter.Parameter, data: np.ndarray) -> Tuple[List[str], int]:
         Par = namedtuple('Par', ['val', 'name'])
@@ -175,8 +132,12 @@ class MyWindow(QtWidgets.QMainWindow):
         return bad_pars, good_sum
 
     def back1(self):
+
         self.ui = Ui_MainWindow1()
         self.ui.setupUi(self)
+        self.ui.pushButton_5.clicked.connect(self.nextTipNonLin)
+        self.ui.pushButton_6.clicked.connect(self.back)
+        self.ui.lineEdit.adjustSize()
 
 
 app = QtWidgets.QApplication([])
