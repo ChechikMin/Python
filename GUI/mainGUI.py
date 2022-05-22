@@ -26,6 +26,7 @@ class MyWindow(QtWidgets.QMainWindow):
     def startMainWindow(self):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
         self.ui.pushButton.clicked.connect(self.btnClicked)
 
     def btnClicked(self):
@@ -46,7 +47,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.__hashData[self.COLUMNS[2]] = int(self.ui.comboBox_2.currentIndex())
         self.__hashData[self.COLUMNS[3]] = int(self.ui.comboBox_3.currentIndex())
         self.__hashData[self.COLUMNS[4]] = int(self.ui.lineEdit_2.text())
-        self.__hashData[self.COLUMNS[5]] =int( self.ui.textEdit_6.text())
+        self.__hashData[self.COLUMNS[5]] = int( self.ui.textEdit_6.text())
         self.__hashData[self.COLUMNS[6]] = int(self.ui.textEdit_7.text())
         self.__hashData[self.COLUMNS[7]] = int(self.ui.textEdit_8.text())
         self.__hashData[self.COLUMNS[8]] = int(self.ui.textEdit_9.text())
