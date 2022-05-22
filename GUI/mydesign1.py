@@ -148,6 +148,7 @@ class Ui_MainWindow1(object):
         self.pushButton_5.setIconSize(QtCore.QSize(50, 50))
         self.pushButton_5.setCheckable(False)
         self.pushButton_5.setObjectName("pushButton_5")
+
         self.horizontalLayout_3.addWidget(self.pushButton_5)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.comboBox.addItem("Male", 1)
@@ -160,10 +161,12 @@ class Ui_MainWindow1(object):
         self.comboBox_3.addItem("Married", 1)
         self.comboBox_3.addItem("Single", 2)
         self.comboBox_3.addItem("Other", 3)
-        MainWindow1.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(MainWindow1)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow1)
+        self.pushButton_6 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_6.setGeometry(QtCore.QRect(10, 480, 141, 61))
+        self.pushButton_6.setStyleSheet("font: 16pt \"MS Shell Dlg 2\";")
+        self.pushButton_6.setObjectName("pushButton_6")
+
 
     def retranslateUi(self, MainWindow1):
         _translate = QtCore.QCoreApplication.translate
@@ -203,3 +206,4 @@ class Ui_MainWindow1(object):
         self.plainTextEdit_3.setPlainText(_translate("MainWindow1", "PayAmt"))
         self.pushButton_6.setText(_translate("MainWindow1", "Back"))
         self.pushButton_5.setText(_translate("MainWindow1", "Next"))
+        self.pushButton_6.setText(_translate("MainWindow1", "Back"))

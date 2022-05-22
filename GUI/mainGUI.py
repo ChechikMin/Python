@@ -1,13 +1,14 @@
 import sys
 from collections import namedtuple
 from typing import Tuple, List
-
+from PyQt5.QtWidgets import  QTableWidgetItem
 from PyQt5 import QtWidgets
 
 from mydesign import Ui_MainWindow
 from mydesign1 import Ui_MainWindow1
 from mydesign3 import Ui_MainWindow3
 from classification import *
+import createCredit
 
 
 
@@ -40,17 +41,17 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def saveData(self):
 
-        self.__hashData[self.COLUMNS[0]] = self.ui.lineEdit.text()
-        self.__hashData[self.COLUMNS[1]] = self.ui.comboBox.currentIndex()
-        self.__hashData[self.COLUMNS[2]] = self.ui.comboBox_2.currentIndex()
-        self.__hashData[self.COLUMNS[3]] = self.ui.comboBox_3.currentIndex()
-        self.__hashData[self.COLUMNS[4]] = self.ui.lineEdit_2.text()
-        self.__hashData[self.COLUMNS[5]] = self.ui.textEdit_6.text()
-        self.__hashData[self.COLUMNS[6]] = self.ui.textEdit_7.text()
-        self.__hashData[self.COLUMNS[7]] = self.ui.textEdit_8.text()
-        self.__hashData[self.COLUMNS[8]] = self.ui.textEdit_9.text()
-        self.__hashData[self.COLUMNS[9]] = self.ui.textEdit_10.text()
-        self.__hashData[self.COLUMNS[10]] = self.ui.textEdit_13.text()
+        self.__hashData[self.COLUMNS[0]] =int( self.ui.lineEdit.text())
+        self.__hashData[self.COLUMNS[1]] = int(self.ui.comboBox.currentIndex())
+        self.__hashData[self.COLUMNS[2]] = int(self.ui.comboBox_2.currentIndex())
+        self.__hashData[self.COLUMNS[3]] = int(self.ui.comboBox_3.currentIndex())
+        self.__hashData[self.COLUMNS[4]] = int(self.ui.lineEdit_2.text())
+        self.__hashData[self.COLUMNS[5]] =int( self.ui.textEdit_6.text())
+        self.__hashData[self.COLUMNS[6]] = int(self.ui.textEdit_7.text())
+        self.__hashData[self.COLUMNS[7]] = int(self.ui.textEdit_8.text())
+        self.__hashData[self.COLUMNS[8]] = int(self.ui.textEdit_9.text())
+        self.__hashData[self.COLUMNS[9]] = int(self.ui.textEdit_10.text())
+        self.__hashData[self.COLUMNS[10]] = int(self.ui.textEdit_13.text())
 
         self.nextTipLogRegr()
 
@@ -81,16 +82,26 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.ui.label.setText("Neural Network procecc : ".join( answer ))
 
+
         self.ui.pushButton.clicked.connect(self.back1)
         self.ui.pushButton_2.clicked.connect(self.calc)
+        self.ui.tableWidget.setItem(0)
 
 
     def calc(self):
-        sum = self.ui.textEdit_5.text()
-        procent = self.ui.textEdit_6.text()
-        years = self.ui.textEdit_4.text()
+        sum = int(self.ui.textEdit_5.text())
+        procent = int(self.ui.textEdit_6.text())
+        years = int(self.ui.textEdit_4.text())
+        income = int(self.ui.textEdit_7.text())
 
-        
+        self.CreditPlan = createCredit.CreateCredit(sum,self.COLUMNS[4], 0.75 * income)
+
+        self.creditPlan = self.CreditPlan.calc_results()
+
+        self.ui.tableWidget(0, 0,QTableWidgetItem(self.creditPlan['Month credit'][0]))
+        self.ui.tableWidget(1,0 ,QTableWidgetItem(self.creditPlan['Bank percent'][0]))
+        self.ui.tableWidget(2,0, QTableWidgetItem(self.creditPlan['Sum of credit'][0]))
+        self.ui.tableWidget(3, 0, QTableWidgetItem(self.creditPlan['Payment per month'][0]))
 
     def prepare_data(self, data: dict) -> np.ndarray:
         df = pd.DataFrame(columns=self.COLUMNS)
