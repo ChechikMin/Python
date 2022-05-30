@@ -19,7 +19,7 @@ class CreateCredit:
         return ((month_percent * (month_percent + 1) ** payments_amount) /
                 ((month_percent + 1) ** payments_amount - 1)) * self.credit_sum
 
-    def calc_params_of_credit(self, expected_sum: int) -> List[float, float, float, int]:
+    def calc_params_of_credit(self, expected_sum: int):
         # percent variants in ascending order: the lower percent is, the better
         credit_percents = np.arange(*self.percent_range, 0.1)
 
