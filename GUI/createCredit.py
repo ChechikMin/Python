@@ -3,6 +3,7 @@ from typing import List, Tuple
 import numpy as np
 import pandas as pd
 
+
 # residual = income - minLive
 
 class CreateCredit:
@@ -14,11 +15,11 @@ class CreateCredit:
         self.max_age_threshold = max_age_threshold
         self.percent_range = percent_range
 
-    def calc_per_month(self, month_percent: int, payments_amount: int, expected_sum) -> float:
+    def calc_per_month(self, month_percent: int, payments_amount: int) -> float:
         return ((month_percent * (month_percent + 1) ** payments_amount) /
                 ((month_percent + 1) ** payments_amount - 1)) * self.credit_sum
 
-    def calc_params_of_credit(self, expected_sum: int) :
+    def calc_params_of_credit(self, expected_sum: int) -> List[float, float, float, int]:
         # percent variants in ascending order: the lower percent is, the better
         credit_percents = np.arange(*self.percent_range, 0.1)
 
@@ -30,7 +31,7 @@ class CreateCredit:
             for percent in credit_percents:
 
                 # calculate payment_per_month
-                payment_per_month = self.calc_per_month(percent / 12, payments_amount, expected_sum)
+                payment_per_month = self.calc_per_month(percent / 12, payments_amount)
 
                 # check the conditions
                 if (payment_per_month < self.residual) and (payments_amount / 12 + self.age < self.max_age_threshold):
@@ -59,13 +60,3 @@ class CreateCredit:
                                                                          abs(current_result[0] - current_result[1] *
                                                                              current_result[3])]
         return Bank_helper_result
-
-
-
-
-
-
-
-
-
-
